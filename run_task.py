@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """Simple helper to send commands to the local Flask agent."""
 import argparse
+import os
+import sys
 import requests
-from utils.ensure_agent_alive import ensure_agent_alive
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
+from ensure_agent_alive import ensure_agent_alive
 
 
 def main() -> None:

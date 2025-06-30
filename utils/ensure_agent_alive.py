@@ -1,5 +1,6 @@
 import subprocess
 import time
+from pathlib import Path
 from typing import Optional
 
 import requests
@@ -22,8 +23,9 @@ def ensure_agent_alive(url: str = "http://localhost:5001/status") -> bool:
     except Exception:
         pass
 
-    # Attempt restart
-    subprocess.run(["bash", "start_flask.sh"])  # best effort
+    # Attempt restart using script relative to this file
+    script = Path(__file__).resolve().parent.parent / "start_flask.sh"
+    subprocess.run(["bash", str(script)])  # best effort
     time.sleep(3)
 
     try:

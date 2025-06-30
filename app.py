@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/status")
 def status():
-    return "OK", 200
+    return jsonify({"status": "online"})
 
 
 @app.route("/run-task", methods=["POST"])
