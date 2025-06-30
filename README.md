@@ -70,6 +70,21 @@ To set up your environment to run the code, first install all requirements:
 pip install -r requirements.txt
 ```
 
+4. 🚀 **Start the local agent**
+
+After installing the requirements you can launch a minimal Flask service that
+executes shell commands:
+
+```bash
+bash start_flask.sh
+```
+
+Use `run_task.py` to send commands to the agent:
+
+```bash
+python run_task.py echo hello
+```
+
 ***Installing LLAMA-CPP :***
 
 LocalGPT uses [LlamaCpp-Python](https://github.com/abetlen/llama-cpp-python) for GGML (you will need llama-cpp-python <=0.1.76) and GGUF (llama-cpp-python >=0.1.83) models.
