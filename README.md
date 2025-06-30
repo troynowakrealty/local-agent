@@ -344,3 +344,23 @@ This is a test project to validate the feasibility of a fully local solution for
        conda uninstall tokenizers, transformers
        pip install transformers
     ```
+
+## Layout Verification
+
+The local agent can verify webpage layouts using the `verify_layout` task. It launches a browser with Playwright, captures a screenshot and compares it to an expected image.
+
+### Command line
+
+```shell
+python run_task.py verify_layout --params '{"url": "http://localhost:8000", "expected_image": "expected.png"}'
+```
+
+### REST API
+
+```shell
+curl -X POST http://localhost:5001/verify-layout \
+  -H 'Content-Type: application/json' \
+  -d '{"url": "http://localhost:8000", "expected": "expected.png"}'
+```
+
+The resulting screenshot is saved to `output/layout_actual.png` and comparison details are written to `layout_check.json`.
