@@ -13,19 +13,13 @@ except Exception:
     Image = None
 
 
-CHECKLIST_ITEMS = [
-    'property lines',
-    'setbacks',
-    'labeled units',
-    'ADU',
-    'parking'
-]
+CHECKLIST_ITEMS = ["property lines", "setbacks", "labeled units", "ADU", "parking"]
 
 
 def check_image(path: Path):
     missing = []
     if not path.exists():
-        missing.append('site plan image')
+        missing.append("site plan image")
         return False, missing
 
     if sync_playwright:
@@ -34,7 +28,7 @@ def check_image(path: Path):
                 browser = p.chromium.launch()
                 page = browser.new_page()
                 page.goto(path.as_uri())
-                page.screenshot(path='last_screenshot.png')
+                page.screenshot(path="last_screenshot.png")
                 browser.close()
         except Exception:
             pass
@@ -42,7 +36,7 @@ def check_image(path: Path):
         try:
             Image.open(path)
         except Exception:
-            missing.append('corrupt image')
+            missing.append("corrupt image")
             return False, missing
 
     # Placeholder checks - real vision processing would go here
@@ -50,24 +44,20 @@ def check_image(path: Path):
     return True, missing
 
 
-def main(image_path='output/latest_siteplan.png'):
+def main(image_path="output/latest_siteplan.png"):
     path = Path(image_path)
     valid, missing = check_image(path)
     msg: str
     if valid and not missing:
-        msg = '✅ Valid site plan, ready to commit'
+        msg = "✅ Valid site plan, ready to commit"
     else:
         msg = f"❌ Missing: {', '.join(missing)} — iterate again"
 
-    results = {
-        'valid': valid and not missing,
-        'missing': missing,
-        'message': msg
-    }
-    with open('validation_results.json', 'w') as f:
+    results = {"valid": valid and not missing, "missing": missing, "message": msg}
+    with open("validation_results.json", "w") as f:
         json.dump(results, f, indent=2)
     return msg
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(main())

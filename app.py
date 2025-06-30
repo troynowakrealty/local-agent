@@ -1,14 +1,22 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
+
 app = Flask(__name__)
 
-@app.route('/status')
-def status(): return 'OK', 200
 
-@app.route('/run-task', methods=['POST'])
+@app.route("/status")
+def status():
+    return "OK", 200
+
+
+@app.route("/run-task", methods=["POST"])
 def run():
-    import subprocess, json
-    cmd = request.get_json().get('command', '')
-    out = subprocess.getoutput(cmd)
-    return jsonify({'output': out})
+    import json
+    import subprocess
 
-if __name__ == '__main__': app.run(port=5001)
+    cmd = request.get_json().get("command", "")
+    out = subprocess.getoutput(cmd)
+    return jsonify({"output": out})
+
+
+if __name__ == "__main__":
+    app.run(port=5001)
