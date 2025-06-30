@@ -2,7 +2,6 @@ import argparse
 import importlib
 import json
 import logging
-from pathlib import Path
 
 logging.basicConfig(
     filename='run_task.log',
