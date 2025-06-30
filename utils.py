@@ -1,14 +1,13 @@
-import os
 import csv
+import os
 from datetime import datetime
+
+from langchain.embeddings import HuggingFaceBgeEmbeddings, HuggingFaceEmbeddings, HuggingFaceInstructEmbeddings
+
 from constants import EMBEDDING_MODEL_NAME
-from langchain.embeddings import HuggingFaceInstructEmbeddings
-from langchain.embeddings import HuggingFaceBgeEmbeddings
-from langchain.embeddings import HuggingFaceEmbeddings
 
 
 def log_to_csv(question, answer):
-
     log_dir, log_file = "local_chat_history", "qa_log.csv"
     # Ensure log directory exists, create if not
     if not os.path.exists(log_dir):

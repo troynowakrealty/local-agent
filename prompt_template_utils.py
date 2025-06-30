@@ -1,6 +1,6 @@
 """
-This file implements prompt template for llama based models. 
-Modify the prompt template based on the model you select. 
+This file implements prompt template for llama based models.
+Modify the prompt template based on the model you select.
 This seems to have significant impact on the output of the LLM.
 """
 
@@ -10,7 +10,7 @@ from langchain.prompts import PromptTemplate
 # this is specific to Llama-2.
 
 system_prompt = """You are a helpful assistant, you will use the provided context to answer user questions.
-Read the given context before answering questions and think step by step. If you can not answer a user question based on 
+Read the given context before answering questions and think step by step. If you can not answer a user question based on
 the provided context, inform the user. Do not use any other information for answering user. Provide a detailed answer to the question."""
 
 
@@ -35,7 +35,6 @@ def get_prompt_template(system_prompt=system_prompt, promptTemplate_type=None, h
             prompt = PromptTemplate(input_variables=["context", "question"], template=prompt_template)
 
     elif promptTemplate_type == "llama3":
-
         B_INST, E_INST = "<|start_header_id|>user<|end_header_id|>", "<|eot_id|>"
         B_SYS, E_SYS = "<|begin_of_text|><|start_header_id|>system<|end_header_id|> ", "<|eot_id|>"
         ASSISTANT_INST = "<|start_header_id|>assistant<|end_header_id|>"
@@ -62,7 +61,7 @@ def get_prompt_template(system_prompt=system_prompt, promptTemplate_type=None, h
                 B_INST
                 + system_prompt
                 + """
-    
+
             Context: {history} \n {context}
             User: {question}"""
                 + E_INST
@@ -73,7 +72,7 @@ def get_prompt_template(system_prompt=system_prompt, promptTemplate_type=None, h
                 B_INST
                 + system_prompt
                 + """
-            
+
             Context: {context}
             User: {question}"""
                 + E_INST
@@ -85,7 +84,7 @@ def get_prompt_template(system_prompt=system_prompt, promptTemplate_type=None, h
             prompt_template = (
                 system_prompt
                 + """
-    
+
             Context: {history} \n {context}
             User: {question}
             Answer:"""
@@ -95,7 +94,7 @@ def get_prompt_template(system_prompt=system_prompt, promptTemplate_type=None, h
             prompt_template = (
                 system_prompt
                 + """
-            
+
             Context: {context}
             User: {question}
             Answer:"""
