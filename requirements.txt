@@ -33,3 +33,4 @@ Streamlit-extras
 openpyxl
 playwright
 Pillow
+pytest
