@@ -1,0 +1,5 @@
+.venv/*
+!.venv/README.md
+node_modules/
+last_screenshot.png
+run_task.log
