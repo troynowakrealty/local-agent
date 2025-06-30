@@ -31,3 +31,5 @@ Streamlit-extras
 
 # Excel File Manipulation
 openpyxl
+playwright
+Pillow
