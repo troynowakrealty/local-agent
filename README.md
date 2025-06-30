@@ -103,6 +103,16 @@ Docker BuildKit does not support GPU during *docker build* time right now, only 
 Run as `docker run -it --mount src="$HOME/.cache",target=/root/.cache,type=bind --gpus=all localgpt`.
 For running the code on Intel® Gaudi® HPU, use the following Dockerfile - `Dockerfile_hpu`.
 
+## Starting the Flask demo
+
+This repository ships with `app.py`, a minimal Flask API used for basic automation. Launch it with the helper script:
+
+```bash
+./start_flask.sh
+```
+
+Before starting a new instance the script searches for an existing `app.py` process or any program listening on port `5001`. If found, you'll be prompted whether the old process should be terminated before continuing.
+
 ## Test dataset
 
 For testing, this repository comes with [Constitution of USA](https://constitutioncenter.org/media/files/constitution.pdf) as an example file to use.
@@ -213,7 +223,7 @@ Another option is to enable chat history. ***Note***: This is disabled by defaul
 python run_localGPT.py --use_history
 ```
 
-You can store user questions and model responses with flag `--save_qa` into a csv file `/local_chat_history/qa_log.csv`. Every interaction will be stored. 
+You can store user questions and model responses with flag `--save_qa` into a csv file `/local_chat_history/qa_log.csv`. Every interaction will be stored.
 
 ```shell
 python run_localGPT.py --save_qa
