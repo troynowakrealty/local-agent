@@ -84,6 +84,11 @@ QA = RetrievalQA.from_chain_type(
 app = Flask(__name__)
 
 
+@app.route("/status")
+def status():
+    return jsonify({"status": "online"})
+
+
 @app.route("/api/delete_source", methods=["GET"])
 def delete_source_route():
     folder_name = "SOURCE_DOCUMENTS"
@@ -166,7 +171,7 @@ def prompt_route():
     if user_prompt:
         # Acquire the lock before processing the prompt
         with request_lock:
-            # print(f'User Prompt: {user_prompt}')              
+            # print(f'User Prompt: {user_prompt}')
             # Get the answer from the chain
             res = QA(user_prompt)
             answer, docs = res["result"], res["source_documents"]
