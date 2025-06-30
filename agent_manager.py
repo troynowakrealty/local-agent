@@ -2,13 +2,13 @@ import os
 import signal
 import subprocess
 import time
-from typing import Optional
 
 import requests
 
-AGENT_URL = 'http://localhost:5001/status'
-SCRIPT = './start_flask.sh'
-PID_FILE = 'flask.pid'
+AGENT_URL = "http://localhost:5001/status"
+SCRIPT = "./start_flask.sh"
+PID_FILE = "flask.pid"
+
 
 def ensure_agent_alive(timeout: float = 0.5, attempts: int = 20) -> bool:
     """Ensure the Flask agent is running."""
@@ -19,7 +19,7 @@ def ensure_agent_alive(timeout: float = 0.5, attempts: int = 20) -> bool:
     except Exception:
         pass
 
-    subprocess.run(['sh', SCRIPT], check=False)
+    subprocess.run(["sh", SCRIPT], check=False)
 
     for _ in range(attempts):
         time.sleep(timeout)
@@ -31,7 +31,8 @@ def ensure_agent_alive(timeout: float = 0.5, attempts: int = 20) -> bool:
             continue
     return False
 
-def stop_agent() -> Optional[int]:
+
+def stop_agent() -> int | None:
     if os.path.exists(PID_FILE):
         try:
             pid = int(open(PID_FILE).read().strip())
