@@ -43,7 +43,7 @@ def load_single_document(file_path: str) -> Document:
             raise ValueError("Document type is undefined")
         return loader.load()[0]
     except Exception as ex:
-        file_log("{} loading error: \n{}".format(file_path, ex))
+        file_log(f"{file_path} loading error: \n{ex}")
         return None
 
 
