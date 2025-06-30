@@ -1,14 +1,16 @@
-import torch
 import subprocess
+
 import streamlit as st
-from run_localGPT import load_model
-from langchain.vectorstores import Chroma
-from constants import CHROMA_SETTINGS, EMBEDDING_MODEL_NAME, PERSIST_DIRECTORY, MODEL_ID, MODEL_BASENAME
-from langchain.embeddings import HuggingFaceInstructEmbeddings
+import torch
 from langchain.chains import RetrievalQA
-from streamlit_extras.add_vertical_space import add_vertical_space
-from langchain.prompts import PromptTemplate
+from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain.memory import ConversationBufferMemory
+from langchain.prompts import PromptTemplate
+from langchain.vectorstores import Chroma
+from streamlit_extras.add_vertical_space import add_vertical_space
+
+from constants import CHROMA_SETTINGS, EMBEDDING_MODEL_NAME, MODEL_BASENAME, MODEL_ID, PERSIST_DIRECTORY
+from run_localGPT import load_model
 
 
 def model_memory():
@@ -37,8 +39,8 @@ with st.sidebar:
     This app is an LLM-powered chatbot built using:
     - [Streamlit](https://streamlit.io/)
     - [LangChain](https://python.langchain.com/)
-    - [LocalGPT](https://github.com/PromtEngineer/localGPT) 
- 
+    - [LocalGPT](https://github.com/PromtEngineer/localGPT)
+
     """
     )
     add_vertical_space(5)

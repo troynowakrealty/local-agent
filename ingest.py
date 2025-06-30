@@ -3,11 +3,11 @@ import os
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 
 import click
+import nltk
 import torch
 from langchain.docstore.document import Document
 from langchain.text_splitter import Language, RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
-from utils import get_embeddings
 
 from constants import (
     CHROMA_SETTINGS,
@@ -17,10 +17,11 @@ from constants import (
     PERSIST_DIRECTORY,
     SOURCE_DIRECTORY,
 )
+from utils import get_embeddings
 
-import nltk
-nltk.download('punkt_tab')
-nltk.download('averaged_perceptron_tagger_eng')
+nltk.download("punkt_tab")
+nltk.download("averaged_perceptron_tagger_eng")
+
 
 def file_log(logentry):
     file1 = open("file_ingest.log", "a")
@@ -42,7 +43,7 @@ def load_single_document(file_path: str) -> Document:
             raise ValueError("Document type is undefined")
         return loader.load()[0]
     except Exception as ex:
-        file_log("%s loading error: \n%s" % (file_path, ex))
+        file_log(f"{file_path} loading error: \n{ex}")
         return None
 
 
@@ -161,7 +162,7 @@ def main(device_type):
 
     """
     (1) Chooses an appropriate langchain library based on the enbedding model name.  Matching code is contained within fun_localGPT.py.
-    
+
     (2) Provides additional arguments for instructor and BGE models to improve results, pursuant to the instructions contained on
     their respective huggingface repository, project page or github repository.
     """

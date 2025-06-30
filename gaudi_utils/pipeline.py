@@ -1,11 +1,10 @@
 import copy
 import os
-import torch
 from pathlib import Path
 from typing import List
 
 import habana_frameworks.torch.hpu as torch_hpu
-
+import torch
 from habana_frameworks.torch.hpu import wrap_in_hpu_graph
 from huggingface_hub import snapshot_download
 from optimum.habana.transformers.generation import MODELS_OPTIMIZED_WITH_STATIC_SHAPES
@@ -77,6 +76,7 @@ class GaudiTextGenerationPipeline(TextGenerationPipeline):
     """
     An end-to-end text-generation pipeline that can used to initialize LangChain classes.
     """
+
     def __init__(self, model_name_or_path=None, revision="main", **kwargs):
         self.task = "text-generation"
         self.device = "hpu"
@@ -139,12 +139,14 @@ class GaudiTextGenerationPipeline(TextGenerationPipeline):
         # Warm-up hpu and compile computation graphs
         self.compile_graph()
 
-    def __call__(self, prompt: List[str]):
+    def __call__(self, prompt: list[str]):
         """
         __call__ method of pipeline class
         """
         # Tokenize input string
-        model_inputs = self.tokenizer.encode_plus(prompt[0], return_tensors="pt", max_length=self.max_padding_length, padding="max_length", truncation=True)
+        model_inputs = self.tokenizer.encode_plus(
+            prompt[0], return_tensors="pt", max_length=self.max_padding_length, padding="max_length", truncation=True
+        )
 
         # Move tensors to hpu
         for t in model_inputs:
@@ -152,7 +154,14 @@ class GaudiTextGenerationPipeline(TextGenerationPipeline):
                 model_inputs[t] = model_inputs[t].to(self.device)
 
         # Call model's generate method
-        output = self.model.generate(**model_inputs, generation_config=self.generation_config, lazy_mode=True, hpu_graphs=True, profiling_steps=0, profiling_warmup_steps=0).cpu()
+        output = self.model.generate(
+            **model_inputs,
+            generation_config=self.generation_config,
+            lazy_mode=True,
+            hpu_graphs=True,
+            profiling_steps=0,
+            profiling_warmup_steps=0,
+        ).cpu()
 
         # Decode and return result
         output_text = self.tokenizer.decode(output[0], skip_special_tokens=True)
