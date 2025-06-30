@@ -168,3 +168,7 @@ cython_debug/
 #MacOS
 .DS_Store
 SOURCE_DOCUMENTS/.DS_Storerun_task.log
+
+# Local agent test files
+flask.pid
+flask.log
