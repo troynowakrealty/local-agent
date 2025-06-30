@@ -2,29 +2,29 @@ name: Test Flask Operator
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.10
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: Install dependencies
-      run: pip install flask
+      - name: Install dependencies
+        run: pip install flask requests pytest
 
-    - name: Start Flask app
-      run: |
-        python3 app.py &
-        sleep 3
+      - name: Start Flask app
+        run: |
+          ./start_flask.sh
+          sleep 3
 
-    - name: Test /status
-      run: curl -f http://localhost:5001/status
+      - name: Run tests
+        run: pytest -v
