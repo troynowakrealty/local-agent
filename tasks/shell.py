@@ -1,9 +1,8 @@
 import subprocess
 
-
-def main(command):
-    """Run a shell command and return its output."""
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    if result.returncode != 0:
-        raise RuntimeError(result.stderr.strip())
-    return result.stdout.strip()
+def run(params):
+    cmd = params.get('command')
+    if not cmd:
+        return 'Missing command'
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    return result.stdout or result.stderr

@@ -1,64 +1,43 @@
-import json
-import os
+from flask import Flask, request, jsonify
 import importlib
 
-from flask import Flask, jsonify, request
-
-from run_task import run_task
-
 app = Flask(__name__)
-LOG_FILE = "last_task.json"
-VALIDATION_FILE = "validation_results.json"
 
-
-def load_task(task_name):
-    """Import a task module from the ``tasks`` package and return it."""
+def load_task_module(task_name):
     try:
-        module = importlib.import_module(f"tasks.{task_name}")
-    except ImportError as e:
-        raise RuntimeError(f"Task '{task_name}' not found") from e
-    if not hasattr(module, "main"):
-        raise RuntimeError(f"Task '{task_name}' has no `main` function")
-    return module
+        return importlib.import_module(f"tasks.{task_name}")
+    except ModuleNotFoundError:
+        try:
+            return importlib.import_module(f"codex_tasks.{task_name}")
+        except ModuleNotFoundError as e:
+            raise ModuleNotFoundError(f"Task {task_name} not found: {e}")
 
-
-@app.route("/run-task", methods=["POST"])
-def run_task_endpoint():
-    data = request.get_json() or {}
-    task = data.get("task")
+@app.route('/run-task', methods=['POST'])
+def run_task():
+    data = request.get_json()
+    task_name = data.get("task")
     params = data.get("params", {})
 
     try:
-        module = load_task(task)
-        result = module.main(**params)
-        status = "success"
+        module = load_task_module(task_name)
+        result = module.run(params)
+        return jsonify({
+            "task": task_name,
+            "params": params,
+            "result": result,
+            "status": "success"
+        })
     except Exception as e:
-        result = str(e)
-        status = "error"
+        return jsonify({
+            "task": task_name,
+            "params": params,
+            "result": str(e),
+            "status": "error"
+        })
 
-    payload = {"task": task, "params": params, "result": result, "status": status}
-    with open(LOG_FILE, "w") as f:
-        json.dump(payload, f, indent=2)
-    return jsonify(payload)
-
-
-@app.route("/submit-siteplan", methods=["POST"])
-def submit_siteplan():
-    message = run_task("validate_siteplan")
-    return jsonify({"message": message})
-
-
-@app.route("/status", methods=["GET"])
+@app.route('/status', methods=['GET'])
 def status():
-    data = {}
-    if os.path.exists(LOG_FILE):
-        with open(LOG_FILE) as f:
-            data["last_task"] = json.load(f)
-    if os.path.exists(VALIDATION_FILE):
-        with open(VALIDATION_FILE) as f:
-            data["validation"] = json.load(f)
-    return jsonify(data)
+    return jsonify({"status": "online"})
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(port=5001)
