@@ -1,5 +1,6 @@
 import json
 import os
+import importlib
 
 from flask import Flask, jsonify, request
 
@@ -10,17 +11,31 @@ LOG_FILE = "last_task.json"
 VALIDATION_FILE = "validation_results.json"
 
 
+def load_task(task_name):
+    """Import a task module from the ``tasks`` package and return it."""
+    try:
+        module = importlib.import_module(f"tasks.{task_name}")
+    except ImportError as e:
+        raise RuntimeError(f"Task '{task_name}' not found") from e
+    if not hasattr(module, "main"):
+        raise RuntimeError(f"Task '{task_name}' has no `main` function")
+    return module
+
+
 @app.route("/run-task", methods=["POST"])
 def run_task_endpoint():
     data = request.get_json() or {}
     task = data.get("task")
     params = data.get("params", {})
+
     try:
-        result = run_task(task, **params)
+        module = load_task(task)
+        result = module.main(**params)
         status = "success"
     except Exception as e:
         result = str(e)
         status = "error"
+
     payload = {"task": task, "params": params, "result": result, "status": status}
     with open(LOG_FILE, "w") as f:
         json.dump(payload, f, indent=2)

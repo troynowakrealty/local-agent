@@ -8,11 +8,15 @@ logging.basicConfig(filename="run_task.log", level=logging.INFO, format="%(ascti
 
 
 def run_task(task_name, **kwargs):
-    """Dynamically load and run a task from codex_tasks."""
+    """Dynamically load and run a task from ``tasks`` or ``codex_tasks``."""
+    module = None
     try:
-        module = importlib.import_module(f"codex_tasks.{task_name}")
-    except ImportError as e:
-        raise RuntimeError(f"Task {task_name} not found: {e}")
+        module = importlib.import_module(f"tasks.{task_name}")
+    except ImportError:
+        try:
+            module = importlib.import_module(f"codex_tasks.{task_name}")
+        except ImportError as e:
+            raise RuntimeError(f"Task {task_name} not found: {e}") from e
 
     if not hasattr(module, "main"):
         raise RuntimeError(f"Task {task_name} has no `main` function")

@@ -349,3 +349,17 @@ This is a test project to validate the feasibility of a fully local solution for
        conda uninstall tokenizers, transformers
        pip install transformers
     ```
+
+## Task examples
+
+Run shell commands or check disk space via the API running on `localhost:5001`:
+
+```bash
+curl -X POST http://localhost:5001/run-task \
+    -H "Content-Type: application/json" \
+    -d '{"task": "shell", "params": {"command": "ls"}}'
+
+curl -X POST http://localhost:5001/run-task \
+    -H "Content-Type: application/json" \
+    -d '{"task": "check_disk_space"}'
+```

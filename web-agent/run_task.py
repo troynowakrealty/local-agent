@@ -17,10 +17,14 @@ def run_task(task_name, **kwargs):
         logging.info("Result: %s", result.stdout)
         return result.stdout
     else:
+        module = None
         try:
-            module = importlib.import_module(f"codex_tasks.{task_name}")
-        except ImportError as e:
-            raise RuntimeError(f"Task {task_name} not found: {e}")
+            module = importlib.import_module(f"tasks.{task_name}")
+        except ImportError:
+            try:
+                module = importlib.import_module(f"codex_tasks.{task_name}")
+            except ImportError as e:
+                raise RuntimeError(f"Task {task_name} not found: {e}") from e
         if not hasattr(module, "main"):
             raise RuntimeError(f"Task {task_name} has no `main` function")
         logging.info("Running python task %s with %s", task_name, kwargs)
